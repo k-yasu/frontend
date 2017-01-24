@@ -105,7 +105,7 @@ case class PressedPage (
 
   val keywordIds: Seq[String] = frontKeywordIds(id)
 
-  override def branding(edition: Edition): Option[Branding] = frontProperties.branding(edition)
+  override def branding(edition: Edition): Option[com.gu.commercial.branding.Branding] = frontProperties.editionBrandings(edition)
 
   def allItems = collections.flatMap(_.curatedPlusBackfillDeduplicated).distinct
 }

@@ -7,7 +7,7 @@ case class ContainerModel(
                            id: String,
                            layoutName: String,
                            content: ContainerContent,
-                           branding: Option[Branding]
+                           branding: Option[com.gu.commercial.branding.Branding]
                          ) {
   val isSingleSponsorContainer: Boolean = branding.isDefined
 }

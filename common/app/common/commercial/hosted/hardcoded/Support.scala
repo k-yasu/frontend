@@ -39,7 +39,8 @@ object Support {
       webUrl = "unused",
       section = None,
       webTitle = "unused",
-      adUnitSuffix = "unused"
+      adUnitSuffix = "unused",
+      editionBrandings = Map.empty
     )
   }
 }

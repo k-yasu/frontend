@@ -1,6 +1,6 @@
 package model
 
-import common.{NavItem, Pagination, SectionLink}
+import common.{Edition, NavItem, Pagination, SectionLink}
 import model.content._
 import model.facia.PressedCollection
 import model.liveblog.{BlockAttributes, Blocks, BodyBlock}
@@ -9,6 +9,7 @@ import org.joda.time.DateTime
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import quiz.{Image => _, _}
+import common.commercial.NewBranding._
 
 object ElementsFormat {
 
@@ -88,7 +89,9 @@ object MetaDataFormat {
     javascriptConfigOverrides: Map[String, JsValue],
     opengraphPropertiesOverrides: Map[String, String],
     isHosted: Boolean,
-    twitterPropertiesOverrides: Map[String, String])
+    twitterPropertiesOverrides: Map[String, String],
+    editionBrandings: Map[Edition, Option[com.gu.commercial.branding.Branding]]
+  )
 
   val readsMetadata: Reads[MetaData] = {
 
@@ -123,7 +126,8 @@ object MetaDataFormat {
       part2.javascriptConfigOverrides,
       part2.opengraphPropertiesOverrides,
       part2.isHosted,
-      part2.twitterPropertiesOverrides
+      part2.twitterPropertiesOverrides,
+      editionBrandings = part2.editionBrandings
       )
     }
   }
@@ -161,7 +165,8 @@ object MetaDataFormat {
           meta.javascriptConfigOverrides,
           meta.opengraphPropertiesOverrides,
           meta.isHosted,
-          meta.twitterPropertiesOverrides
+          meta.twitterPropertiesOverrides,
+          meta.editionBrandings
         )
       )
     })
@@ -190,9 +195,9 @@ object ContentTypeFormat {
   implicit val mediaAssetFormat = Json.format[MediaAsset]
   implicit val mediaAtomFormat = Json.format[MediaAtom]
   implicit val interactiveAtomFormat = Json.format[InteractiveAtom]
-  implicit val genericThriftAtomFormat = GenericThriftAtomFormat 
+  implicit val genericThriftAtomFormat = GenericThriftAtomFormat
   implicit val recipeThriftAtomFormat = RecipeThriftAtomFormat
-  implicit val recipeAtomFormat = Json.format[RecipeAtom] 
+  implicit val recipeAtomFormat = Json.format[RecipeAtom]
   implicit val atomsFormat = Json.format[Atoms]
   implicit val blockAttributesFormat = Json.format[BlockAttributes]
   implicit val bodyBlockFormat = Json.format[BodyBlock]

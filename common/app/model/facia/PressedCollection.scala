@@ -35,7 +35,7 @@ case class PressedCollection(
     c.properties.maybeContentId.getOrElse(c.card.id)
   }
 
-  def branding(edition: Edition): Option[Branding] = {
+  def branding(edition: Edition): Option[com.gu.commercial.branding.Branding] = {
     if (config.showBranding) {
       val brandings = curatedPlusBackfillDeduplicated flatMap (_.branding(edition))
       if (brandings.nonEmpty && brandings.forall(_ == brandings.head)) {

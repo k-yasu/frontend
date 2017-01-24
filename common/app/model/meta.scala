@@ -137,6 +137,7 @@ object MetaData {
       opengraphPropertiesOverrides = opengraphPropertiesOverrides,
       isHosted = isHosted,
       twitterPropertiesOverrides = twitterPropertiesOverrides,
+      // todo
       editionBrandings = Map.empty
     )
   }
@@ -312,7 +313,7 @@ object Page {
 // A Page is something that has metadata, and anything with Metadata can be rendered.
 trait Page {
   def metadata: MetaData
-  def branding(edition: Edition): Option[Branding] = None
+  def branding(edition: Edition): Option[com.gu.commercial.branding.Branding] = None
 }
 
 // ContentPage objects use data from a ContentApi item to populate metadata.

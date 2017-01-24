@@ -1,8 +1,9 @@
 package views.support
 
+import com.gu.commercial.branding.BrandingType
 import common.Edition
 import common.Edition.defaultEdition
-import common.commercial.{Sponsored, _}
+import common.commercial._
 import layout.{ColumnAndCards, ContentCard, FaciaContainer}
 import model.{Page, PressedPage}
 import org.apache.commons.lang.StringEscapeUtils._
@@ -30,16 +31,17 @@ object Commercial {
     s"/guardian-labs$glabsUrlSuffix"
   }
 
-  private def isBrandedContent(page: Page, edition: Edition, sponsorshipType: SponsorshipType): Boolean =
-    page.branding(edition).exists(_.sponsorshipType == sponsorshipType)
+  private def isBrandedContent(page: Page, edition: Edition, brandingType: BrandingType): Boolean =
+    page.branding(edition).exists(_.brandingType == BrandingType)
 
-  def isPaidContent(page: Page): Boolean = isBrandedContent(page, defaultEdition, PaidContent)
+  def isPaidContent(page: Page): Boolean =
+    isBrandedContent(page, defaultEdition, com.gu.commercial.branding.PaidContent)
 
   def isSponsoredContent(page: Page)(implicit request: RequestHeader): Boolean =
-    isBrandedContent(page, Edition(request), Sponsored)
+    isBrandedContent(page, Edition(request), com.gu.commercial.branding.Sponsored)
 
   def isFoundationFundedContent(page: Page)(implicit request: RequestHeader): Boolean =
-    isBrandedContent(page, defaultEdition, Foundation)
+    isBrandedContent(page, defaultEdition, com.gu.commercial.branding.Foundation)
 
   def isBrandedContent(page: Page)(implicit request: RequestHeader): Boolean = {
     isPaidContent(page) || isSponsoredContent(page) || isFoundationFundedContent(page)
@@ -48,7 +50,8 @@ object Commercial {
   def listSponsorLogosOnPage(page: Page)(implicit request: RequestHeader): Option[Seq[String]] = {
 
     val edition = Edition(request)
-    def sponsor(branding: Edition => Option[Branding]) = branding(edition) map (_.sponsorName.toLowerCase)
+    def sponsor(branding: Edition => Option[com.gu.commercial.branding.Branding]) = branding(edition) map
+                                                                                    (_.sponsor.toLowerCase)
 
     val pageSponsor = sponsor(page.branding)
 
@@ -63,7 +66,7 @@ object Commercial {
           val hasBrandedTag = container.config.showBranding
           lazy val hasNoSponsor = container.branding(edition).isEmpty
           lazy val hasOnlyPaidContent = container.curatedPlusBackfillDeduplicated.forall {
-            _.branding(edition).exists(_.sponsorshipType == PaidContent)
+            _.branding(edition).exists(_.brandingType == PaidContent)
           }
           if (hasBrandedTag && hasNoSponsor && hasOnlyPaidContent) {
             container.curatedPlusBackfillDeduplicated.flatMap { card =>
@@ -81,8 +84,8 @@ object Commercial {
     allSponsors map (_ map escapeJavaScript)
   }
 
-  def brandingType(page: Page)(implicit request: RequestHeader): Option[SponsorshipType] = {
-    page.branding(Edition(request)).map(_.sponsorshipType)
+  def brandingType(page: Page)(implicit request: RequestHeader): Option[BrandingType] = {
+    page.branding(Edition(request)).map(_.brandingType)
   }
 
   object topAboveNavSlot {
@@ -121,12 +124,12 @@ object Commercial {
 
       def isPaid(containerModel: ContainerModel): Boolean = {
 
-        val isPaidContainer = containerModel.branding.exists(_.sponsorshipType == PaidContent)
+        val isPaidContainer = containerModel.branding.exists(_.brandingType == com.gu.commercial.branding.PaidContent)
 
         val isAllPaidContent = {
           val content = containerModel.content
           val cards = content.initialCards ++ content.showMoreCards
-          cards.nonEmpty && cards.forall(_.branding.exists(_.sponsorshipType == PaidContent))
+          cards.nonEmpty && cards.forall(_.branding.exists(_.brandingType == com.gu.commercial.branding.PaidContent))
         }
 
         isPaidContainer || isAllPaidContent
@@ -198,7 +201,7 @@ object Commercial {
                                   container: ContainerModel,
                                   card: CardContent)(implicit request: RequestHeader): String = {
       val sponsor =
-        container.branding.map(_.sponsorName) orElse card.branding.map(_.sponsorName) getOrElse ""
+        container.branding.map(_.sponsor) orElse card.branding.map(_.sponsor) getOrElse ""
       val cardIndex =
         (container.content.initialCards ++ container.content.showMoreCards).indexWhere(_.headline == card.headline)
       Seq(
@@ -225,7 +228,7 @@ object Commercial {
         optSection.getOrElse(""),
         optContainerTitle.getOrElse(""),
         omnitureId,
-        card.branding.map(_.sponsorName).getOrElse(""),
+        card.branding.map(_.sponsor).getOrElse(""),
         card.headline
       ) mkString " | "
     }

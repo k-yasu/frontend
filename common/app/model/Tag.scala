@@ -47,7 +47,9 @@ object Tag {
       },
       javascriptConfigOverrides = javascriptConfigOverrides,
       opengraphPropertiesOverrides = openGraphPropertiesOverrides,
-      twitterPropertiesOverrides = Map("twitter:card" -> "summary")
+      twitterPropertiesOverrides = Map("twitter:card" -> "summary"),
+      // todo
+      editionBrandings = Map.empty
     )
   }
 
@@ -188,7 +190,7 @@ case class Tag (
   val isFootballCompetition = properties.references.exists(_.`type` == "pa-football-competition")
   val contributorImagePath = properties.bylineImageUrl.map(ImgSrc(_, Contributor))
 
-  override def branding(edition: Edition): Option[Branding] = {
-    BrandHunter.findBranding(properties.activeBrandings, edition, publicationDate = None)
+  override def branding(edition: Edition): Option[com.gu.commercial.branding.Branding] = {
+    metadata.editionBrandings(edition)
   }
 }

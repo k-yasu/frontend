@@ -1,13 +1,13 @@
-@import common.commercial.{Branding, Logo, PaidContent}
+@import com.gu.commercial.branding.{Branding, Logo, PaidContent}
 @import implicits.Requests.RichRequestHeader
 
 @(branding: common.commercial.Branding, onDarkBackground: Boolean = false)(implicit request: RequestHeader)
 @standardLogo(logo: Logo) = {
-    <img src="@logo.url" alt="@branding.sponsorName" class="badge__logo">
+    <img src="@logo.src" alt="@branding.sponsorName" class="badge__logo">
 }
 
 @ampLogo(logo: Logo) = {
-    @logo.dimensions.map { dim =>
+    @((logo.width, logo.height)).map { d =>
         <amp-img src="@logo.url"
                  width="@dim.width"
                  height="@dim.height"

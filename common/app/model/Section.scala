@@ -1,6 +1,7 @@
 package model
 
 import campaigns.PersonalInvestmentsCampaign
+import com.gu.commercial.branding.BrandingFinder
 import com.gu.contentapi.client.model.v1.{Section => ApiSection}
 import common.commercial.{BrandHunter, Branding}
 import common.{Edition, Pagination}
@@ -35,7 +36,12 @@ object Section {
         case "crosswords" => None
         case _ => Some("front")
       },
-      javascriptConfigOverrides = javascriptConfigOverrides
+      javascriptConfigOverrides = javascriptConfigOverrides,
+      editionBrandings = {
+        Edition.all.map { edition =>
+          edition -> BrandingFinder.findBranding(section, edition.id)
+        }.toMap
+      }
     )
 
     Section(
@@ -52,8 +58,8 @@ case class Section private (
   activeBrandings: Option[Seq[Branding]]
   ) extends StandalonePage {
 
-  override def branding(edition: Edition): Option[Branding] = {
-    BrandHunter.findBranding(metadata.section.flatMap(_.activeBrandings), edition, publicationDate = None)
+  override def branding(edition: Edition): Option[com.gu.commercial.branding.Branding] = {
+    metadata.editionBrandings(edition)
   }
 }
 

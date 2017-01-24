@@ -13,7 +13,7 @@ case class CardContent(
                         image: Option[ImageMedia],
                         fallbackImageUrl: Option[String],
                         targetUrl: String,
-                        branding: Option[Branding]
+                        branding: Option[com.gu.commercial.branding.Branding]
                       )
 
 object CardContent {
@@ -74,7 +74,7 @@ object CardContent {
         val url = item.metadata.webUrl
         clickMacro map { cm => s"$cm$url" } getOrElse url
       },
-      branding = BrandHunter.findContentBranding(item, edition)
+      branding = item.metadata.editionBrandings(edition)
     )
   }
 }
