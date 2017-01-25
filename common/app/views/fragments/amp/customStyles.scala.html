@@ -1,7 +1,6 @@
 @(page: model.Page, mainPicture: String, ctaImage: Option[String], brandColour: String)(implicit request: RequestHeader, context: model.ApplicationContext)
-
 @import common.Edition
-@import common.commercial.PaidContent
+@import conf.Static
 @import play.api.Mode.Dev
 
 <style amp-custom>
@@ -9,7 +8,7 @@
     @if(page.metadata.isHosted) {
         @fragments.amp.stylesheets.hosted(mainPicture, ctaImage, brandColour)
     } else {
-        @if(page.branding(Edition(request)).exists(_.sponsorshipType == PaidContent)) {
+        @if(page.branding(Edition(request)).exists(_.brandingType == com.gu.commercial.branding.PaidContent)) {
             @fragments.amp.stylesheets.glabs()
         }
     }
