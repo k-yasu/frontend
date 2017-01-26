@@ -1,7 +1,7 @@
 package model
 
+import com.gu.commercial.branding.{Branding, PaidContent}
 import common.Edition._
-import common.commercial.PaidContent
 import common.{Edition, ExecutionContexts, Logging}
 import play.api.libs.json.Json
 import common.commercial.NewBranding._
@@ -57,7 +57,7 @@ case class FrontProperties(
   imageHeight: Option[String],
   isImageDisplayed: Boolean,
   editorialType: Option[String],
-  editionBrandings: Map[Edition, Option[com.gu.commercial.branding.Branding]]
+  editionBrandings: Map[Edition, Option[Branding]]
 ) {
   lazy val isAdvertisementFeature: Boolean = editionBrandings(defaultEdition).exists(_.brandingType == PaidContent)
 }
@@ -75,7 +75,7 @@ object FrontProperties {
     editionBrandings = Map.empty
   )
 
-  def fromEditionBrandings(editionBrandings: Map[Edition, Option[com.gu.commercial.branding.Branding]]):
+  def fromEditionBrandings(editionBrandings: Map[Edition, Option[Branding]]):
   FrontProperties =
     empty.copy(editionBrandings = editionBrandings)
 }

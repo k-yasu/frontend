@@ -2,15 +2,16 @@ package common.commercial.hosted
 
 import java.net.URLEncoder
 
+import com.gu.commercial.branding.Dimensions
 import com.gu.contentapi.client.model.v1.ContentType.{Article, Gallery, Video}
 import com.gu.contentapi.client.model.v1.{Content, SponsorshipLogoDimensions}
 import common.Logging
-import common.commercial.Dimensions
 import common.commercial.hosted.HostedUtils.getAndLog
 import common.commercial.hosted.HostedVideoPage.log
 import conf.Configuration.site
 import model.StandalonePage
 import play.api.libs.json.Json
+import common.commercial.NewBranding._
 
 trait HostedPage extends StandalonePage {
   def id: String

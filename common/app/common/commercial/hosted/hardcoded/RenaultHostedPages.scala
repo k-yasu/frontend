@@ -1,6 +1,6 @@
 package common.commercial.hosted.hardcoded
 
-import common.commercial.Dimensions
+import com.gu.commercial.branding.Dimensions
 import common.commercial.hosted._
 import conf.Static
 

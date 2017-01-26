@@ -1,9 +1,9 @@
 package model
 
 import campaigns.PersonalInvestmentsCampaign
+import com.gu.commercial.branding.Branding
 import com.gu.facia.api.models._
 import common.Edition
-import common.commercial.Branding
 import conf.Configuration
 import contentapi.Paths
 import model.facia.PressedCollection
@@ -105,7 +105,7 @@ case class PressedPage (
 
   val keywordIds: Seq[String] = frontKeywordIds(id)
 
-  override def branding(edition: Edition): Option[com.gu.commercial.branding.Branding] = frontProperties.editionBrandings(edition)
+  override def branding(edition: Edition): Option[Branding] = frontProperties.editionBrandings(edition)
 
   def allItems = collections.flatMap(_.curatedPlusBackfillDeduplicated).distinct
 }

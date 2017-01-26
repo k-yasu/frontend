@@ -1,5 +1,6 @@
 package implicits
 
+import com.gu.commercial.branding.PaidContent
 import common.Edition.defaultEdition
 import implicits.Dates._
 import model._
@@ -48,7 +49,7 @@ object FaciaContentFrontendHelpers {
     }
 
     lazy val shouldHidePublicationDate: Boolean = {
-      faciaContent.branding(defaultEdition).exists(_.brandingType == com.gu.commercial.branding.PaidContent) &&
+      faciaContent.branding(defaultEdition).exists(_.brandingType == PaidContent) &&
       faciaContent.card.webPublicationDateOption.exists(_.isOlderThan(2.weeks))
     }
 

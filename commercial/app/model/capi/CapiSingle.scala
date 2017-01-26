@@ -1,5 +1,6 @@
 package commercial.model.capi
 
+import com.gu.commercial.branding.Branding
 import common.Edition
 import model.ContentType
 import play.api.libs.json.{Json, Writes}
@@ -13,7 +14,7 @@ case class CapiSingle(
   audioTag: Boolean,
   galleryTag: Boolean,
   videoTag: Boolean,
-  branding: Option[com.gu.commercial.branding.Branding],
+  branding: Option[Branding],
   edition: String
 )
 

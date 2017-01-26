@@ -1,8 +1,8 @@
 package model.facia
 
+import com.gu.commercial.branding.Branding
 import com.gu.facia.api.{models => fapi}
 import common.Edition
-import common.commercial.Branding
 import implicits.CollectionsOps._
 import model.pressed._
 import org.joda.time.DateTime
@@ -35,7 +35,7 @@ case class PressedCollection(
     c.properties.maybeContentId.getOrElse(c.card.id)
   }
 
-  def branding(edition: Edition): Option[com.gu.commercial.branding.Branding] = {
+  def branding(edition: Edition): Option[Branding] = {
     if (config.showBranding) {
       val brandings = curatedPlusBackfillDeduplicated flatMap (_.branding(edition))
       if (brandings.nonEmpty && brandings.forall(_ == brandings.head)) {

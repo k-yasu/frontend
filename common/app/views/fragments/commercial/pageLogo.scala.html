@@ -1,8 +1,9 @@
-@(branding: com.gu.commercial.branding.Branding,
+@import com.gu.commercial.branding.Branding
+@import views.html.fragments.commercial.logo
+@(branding: Branding,
   isInteractive: Boolean,
   onDarkBackground: Boolean = false
 )(implicit request: RequestHeader)
-@import views.html.fragments.commercial.logo
 
 <div class="badge badge--alt @if(isInteractive){badge--interactive}">
     @logo(branding, onDarkBackground)

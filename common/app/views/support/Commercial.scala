@@ -1,6 +1,6 @@
 package views.support
 
-import com.gu.commercial.branding.BrandingType
+import com.gu.commercial.branding._
 import common.Edition
 import common.Edition.defaultEdition
 import common.commercial._
@@ -35,13 +35,13 @@ object Commercial {
     page.branding(edition).exists(_.brandingType == BrandingType)
 
   def isPaidContent(page: Page): Boolean =
-    isBrandedContent(page, defaultEdition, com.gu.commercial.branding.PaidContent)
+    isBrandedContent(page, defaultEdition, PaidContent)
 
   def isSponsoredContent(page: Page)(implicit request: RequestHeader): Boolean =
-    isBrandedContent(page, Edition(request), com.gu.commercial.branding.Sponsored)
+    isBrandedContent(page, Edition(request), Sponsored)
 
   def isFoundationFundedContent(page: Page)(implicit request: RequestHeader): Boolean =
-    isBrandedContent(page, defaultEdition, com.gu.commercial.branding.Foundation)
+    isBrandedContent(page, defaultEdition, Foundation)
 
   def isBrandedContent(page: Page)(implicit request: RequestHeader): Boolean = {
     isPaidContent(page) || isSponsoredContent(page) || isFoundationFundedContent(page)
@@ -50,8 +50,7 @@ object Commercial {
   def listSponsorLogosOnPage(page: Page)(implicit request: RequestHeader): Option[Seq[String]] = {
 
     val edition = Edition(request)
-    def sponsor(branding: Edition => Option[com.gu.commercial.branding.Branding]) = branding(edition) map
-                                                                                    (_.sponsorName.toLowerCase)
+    def sponsor(branding: Edition => Option[Branding]) = branding(edition) map (_.sponsorName.toLowerCase)
 
     val pageSponsor = sponsor(page.branding)
 
@@ -124,12 +123,12 @@ object Commercial {
 
       def isPaid(containerModel: ContainerModel): Boolean = {
 
-        val isPaidContainer = containerModel.branding.exists(_.brandingType == com.gu.commercial.branding.PaidContent)
+        val isPaidContainer = containerModel.branding.exists(_.brandingType == PaidContent)
 
         val isAllPaidContent = {
           val content = containerModel.content
           val cards = content.initialCards ++ content.showMoreCards
-          cards.nonEmpty && cards.forall(_.branding.exists(_.brandingType == com.gu.commercial.branding.PaidContent))
+          cards.nonEmpty && cards.forall(_.branding.exists(_.brandingType == PaidContent))
         }
 
         isPaidContainer || isAllPaidContent

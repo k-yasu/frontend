@@ -1,7 +1,7 @@
 package model
 
+import com.gu.commercial.branding.Branding
 import com.gu.contentapi.client.model.v1.{Podcast => ApiPodcast, Reference => ApiReference, Tag => ApiTag}
-import common.commercial.{BrandHunter, Branding}
 import common.{Edition, Pagination, RelativePathEscaper}
 import conf.Configuration
 import contentapi.SectionTagLookUp
@@ -135,7 +135,6 @@ object TagProperties {
       bylineImageUrl = tag.bylineImageUrl,
       podcast = tag.podcast.map(Podcast.make),
       references = tag.references.map(Reference.make),
-      activeBrandings = tag.activeSponsorships.map(_.map(Branding.make(tag.webTitle))),
       paidContentType = tag.paidContentType
     )
   }
@@ -157,7 +156,6 @@ case class TagProperties(
                           bylineImageUrl: Option[String],
                           podcast: Option[Podcast],
                           references: Seq[Reference],
-                          activeBrandings: Option[Seq[Branding]],
                           paidContentType: Option[String]
 ) {
  val footballBadgeUrl = references.find(_.`type` == "pa-football-team")
@@ -190,7 +188,5 @@ case class Tag (
   val isFootballCompetition = properties.references.exists(_.`type` == "pa-football-competition")
   val contributorImagePath = properties.bylineImageUrl.map(ImgSrc(_, Contributor))
 
-  override def branding(edition: Edition): Option[com.gu.commercial.branding.Branding] = {
-    metadata.editionBrandings(edition)
-  }
+  override def branding(edition: Edition): Option[Branding] = metadata.editionBrandings(edition)
 }

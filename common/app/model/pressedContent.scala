@@ -1,5 +1,6 @@
 package model.pressed
 
+import com.gu.commercial.branding.Branding
 import com.gu.facia.api.utils.FaciaContentUtils
 import com.gu.facia.api.{models => fapi, utils => fapiutils}
 import com.gu.facia.client.models.{Backfill, Branded, CollectionConfigJson, Metadata}
@@ -163,7 +164,7 @@ final case class PressedProperties(
   href: Option[String],
   webUrl: Option[String]
 ) {
-  def branding(edition: Edition): Option[com.gu.commercial.branding.Branding] =
+  def branding(edition: Edition): Option[Branding] =
     maybeContent map (_.metadata.editionBrandings(edition)) getOrElse None
 }
 
@@ -285,7 +286,7 @@ sealed trait PressedContent {
   def discussion: PressedDiscussionSettings
   def display: PressedDisplaySettings
 
-  def branding(edition: Edition): Option[com.gu.commercial.branding.Branding] = properties.branding(edition)
+  def branding(edition: Edition): Option[Branding] = properties.branding(edition)
 }
 sealed trait Snap extends PressedContent
 

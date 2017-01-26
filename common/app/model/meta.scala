@@ -1,11 +1,11 @@
 package model
 
 import campaigns.PersonalInvestmentsCampaign
-import com.gu.commercial.branding.BrandingFinder
+import com.gu.commercial.branding.{Branding, BrandingFinder}
 import com.gu.contentapi.client.model.v1.{Content => CapiContent}
 import com.gu.contentapi.client.model.{v1 => contentapi}
 import com.gu.contentapi.client.utils.CapiModelEnrichment.RichCapiDateTime
-import common.commercial.{AdUnitMaker, Branding}
+import common.commercial.AdUnitMaker
 import common.dfp._
 import common.{Edition, ManifestData, NavItem, Pagination}
 import conf.Configuration
@@ -206,7 +206,7 @@ final case class MetaData (
   isHosted: Boolean = false,
   twitterPropertiesOverrides: Map[String, String] = Map(),
   contentWithSlimHeader: Boolean = false,
-  editionBrandings: Map[Edition, Option[com.gu.commercial.branding.Branding]]
+  editionBrandings: Map[Edition, Option[Branding]]
 ){
   val sectionId = section map (_.id) getOrElse ""
 
@@ -313,7 +313,7 @@ object Page {
 // A Page is something that has metadata, and anything with Metadata can be rendered.
 trait Page {
   def metadata: MetaData
-  def branding(edition: Edition): Option[com.gu.commercial.branding.Branding] = None
+  def branding(edition: Edition): Option[Branding] = None
 }
 
 // ContentPage objects use data from a ContentApi item to populate metadata.
@@ -341,7 +341,7 @@ trait ContentPage extends Page {
     item.content.twitterProperties ++
     metadata.twitterPropertiesOverrides
 
-  override def branding(edition: Edition): Option[com.gu.commercial.branding.Branding] = metadata
+  override def branding(edition: Edition): Option[Branding] = metadata
                                                                                          .editionBrandings(edition)
 }
 case class SimpleContentPage(content: ContentType) extends ContentPage {

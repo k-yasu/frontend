@@ -1,5 +1,6 @@
 package common.commercial
 
+import com.gu.commercial.branding.Branding
 import common.Edition
 import model.facia.PressedCollection
 
@@ -7,7 +8,7 @@ case class ContainerModel(
                            id: String,
                            layoutName: String,
                            content: ContainerContent,
-                           branding: Option[com.gu.commercial.branding.Branding]
+                           branding: Option[Branding]
                          ) {
   val isSingleSponsorContainer: Boolean = branding.isDefined
 }

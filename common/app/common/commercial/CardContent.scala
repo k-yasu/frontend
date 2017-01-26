@@ -1,5 +1,6 @@
 package common.commercial
 
+import com.gu.commercial.branding.Branding
 import common.Edition
 import model.pressed.PressedContent
 import model.{ContentType, ImageMedia, ImageOverride}
@@ -13,7 +14,7 @@ case class CardContent(
                         image: Option[ImageMedia],
                         fallbackImageUrl: Option[String],
                         targetUrl: String,
-                        branding: Option[com.gu.commercial.branding.Branding]
+                        branding: Option[Branding]
                       )
 
 object CardContent {

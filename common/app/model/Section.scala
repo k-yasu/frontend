@@ -1,9 +1,9 @@
 package model
 
 import campaigns.PersonalInvestmentsCampaign
-import com.gu.commercial.branding.BrandingFinder
+import com.gu.commercial.branding.Branding
 import com.gu.contentapi.client.model.v1.{Section => ApiSection}
-import common.commercial.{BrandHunter, Branding}
+import common.commercial.EditionBranding
 import common.{Edition, Pagination}
 import play.api.libs.json.{JsBoolean, JsString, JsValue, Json}
 
@@ -37,47 +37,31 @@ object Section {
         case _ => Some("front")
       },
       javascriptConfigOverrides = javascriptConfigOverrides,
-      editionBrandings = {
-        Edition.all.map { edition =>
-          edition -> BrandingFinder.findBranding(section, edition.id)
-        }.toMap
-      }
+      editionBrandings = EditionBranding.fromSection(section)
     )
 
     Section(
       metadata,
-      isEditionalised = section.editions.length > 1,
-      activeBrandings = section.activeSponsorships map (_ map Branding.make(section.webTitle))
+      isEditionalised = section.editions.length > 1
     )
   }
 }
 
 case class Section private (
   override val metadata: MetaData,
-  isEditionalised: Boolean,
-  activeBrandings: Option[Seq[Branding]]
+  isEditionalised: Boolean
   ) extends StandalonePage {
 
-  override def branding(edition: Edition): Option[com.gu.commercial.branding.Branding] = {
-    metadata.editionBrandings(edition)
-  }
+  override def branding(edition: Edition): Option[Branding] = metadata.editionBrandings(edition)
 }
 
-case class SectionSummary(
-  id: String,
-  activeBrandings: Option[Seq[Branding]]
-)
+case class SectionSummary(id: String)
 
 object SectionSummary {
 
   implicit val jsonFormat = Json.format[SectionSummary]
 
-  def fromCapiSection(section: ApiSection): SectionSummary = {
-    SectionSummary(
-      id = section.id,
-      activeBrandings = section.activeSponsorships map (_ map Branding.make(section.webTitle))
-    )
-  }
+  def fromCapiSection(section: ApiSection): SectionSummary = SectionSummary(id = section.id)
 
-  def fromId(sectionId: String): SectionSummary = SectionSummary(id = sectionId, activeBrandings = None)
+  def fromId(sectionId: String): SectionSummary = SectionSummary(id = sectionId)
 }
