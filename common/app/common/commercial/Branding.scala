@@ -122,6 +122,7 @@ object Branding {
 
   implicit val brandingFormat = Json.format[Branding]
 
+
   def make(sectionOrTagName: String)(sponsorship: ApiSponsorship): Branding = {
 
     Branding(

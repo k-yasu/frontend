@@ -10,6 +10,8 @@ import play.api.libs.json._
 // todo: move into commercial-shared
 object NewBranding {
 
+  implicit val dimensionsFormat = Json.format[com.gu.commercial.branding.Dimensions]
+
   implicit val logoFormat = Json.format[com.gu.commercial.branding.Logo]
 
   implicit val brandingTypeWrites: Writes[BrandingType] = new Writes[BrandingType] {

@@ -51,7 +51,7 @@ object Commercial {
 
     val edition = Edition(request)
     def sponsor(branding: Edition => Option[com.gu.commercial.branding.Branding]) = branding(edition) map
-                                                                                    (_.sponsor.toLowerCase)
+                                                                                    (_.sponsorName.toLowerCase)
 
     val pageSponsor = sponsor(page.branding)
 
@@ -201,7 +201,7 @@ object Commercial {
                                   container: ContainerModel,
                                   card: CardContent)(implicit request: RequestHeader): String = {
       val sponsor =
-        container.branding.map(_.sponsor) orElse card.branding.map(_.sponsor) getOrElse ""
+        container.branding.map(_.sponsorName) orElse card.branding.map(_.sponsorName) getOrElse ""
       val cardIndex =
         (container.content.initialCards ++ container.content.showMoreCards).indexWhere(_.headline == card.headline)
       Seq(
@@ -228,7 +228,7 @@ object Commercial {
         optSection.getOrElse(""),
         optContainerTitle.getOrElse(""),
         omnitureId,
-        card.branding.map(_.sponsor).getOrElse(""),
+        card.branding.map(_.sponsorName).getOrElse(""),
         card.headline
       ) mkString " | "
     }

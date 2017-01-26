@@ -3,7 +3,7 @@
 @(branding: Branding, onDarkBackground: Boolean = false)(implicit request: RequestHeader)
 
 @standardLogo(logo: Logo) = {
-    <img src="@logo.src" alt="@branding.sponsor" class="badge__logo">
+    <img src="@logo.src" alt="@branding.sponsorName" class="badge__logo">
 }
 
 @ampLogo(logo: Logo) = {
@@ -11,14 +11,14 @@
         <amp-img src="@logo.src"
                  width="@dim.width"
                  height="@dim.height"
-                 alt="@branding.sponsor"
+                 alt="@branding.sponsorName"
                  class="badge__logo"></amp-img>
     }.getOrElse {
-        <p>@branding.sponsor</p>
+        <p>@branding.sponsorName</p>
     }
 }
 
-@branding.label
+@branding.logo.label
 <a class="badge__link" href="@branding.logo.link" data-sponsor="@branding.sponsorName.toLowerCase">
     @if(request.isAmp) {
         @if(onDarkBackground && branding.logoForDarkBackground.nonEmpty) {

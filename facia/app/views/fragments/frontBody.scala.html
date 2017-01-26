@@ -1,10 +1,10 @@
 @import common.Edition
-@import common.commercial.{ContainerModel, PaidContent, Sponsored}
+@import common.commercial.ContainerModel
 @import views.support.RenderClasses
 @(faciaPage: model.PressedPage)(implicit request: RequestHeader, context: model.ApplicationContext)
 
-@defining((faciaPage.branding(Edition(request)).exists(_.sponsorshipType == Sponsored),
-           faciaPage.branding(Edition(request)).exists(_.sponsorshipType == PaidContent))) { case (isSponsored, isAdFeature) =>
+@defining((faciaPage.branding(Edition(request)).exists(_.brandingType == com.gu.commercial.branding.Sponsored),
+           faciaPage.branding(Edition(request)).exists(_.brandingType == com.gu.commercial.branding.PaidContent))) { case (isSponsored, isAdFeature) =>
     @if(faciaPage.collections.nonEmpty) {
         <div class="l-side-margins">
             <div class="@RenderClasses(Map(

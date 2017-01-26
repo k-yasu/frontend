@@ -1,5 +1,6 @@
 package frontpress
 
+import com.gu.commercial.branding.BrandingFinder
 import com.gu.contentapi.client.ContentApiClientLogic
 import com.gu.contentapi.client.model.v1.ItemResponse
 import com.gu.contentapi.client.model.{ItemQuery, SearchQuery}
@@ -8,9 +9,7 @@ import com.gu.facia.api.models.Collection
 import com.gu.facia.api.{FAPI, Response}
 import com.gu.facia.client.ApiClient
 import common._
-import common.commercial.Branding
 import conf.Configuration
-import conf.switches.Switches
 import conf.switches.Switches.FaciaInlineEmbeds
 import contentapi.{CapiHttpClient, CircuitBreakingContentApiClient, ContentApiClient, QueryDefaults}
 import fronts.FrontsApi
@@ -219,20 +218,20 @@ trait FapiFrontPress extends Logging with ExecutionContexts {
       val description: Option[String] = seoFromConfig.description
         .orElse(SeoData.descriptionFromWebTitle(webTitle))
 
-      val frontProperties: FrontProperties = ConfigAgent.fetchFrontProperties(path)
-        .copy(
-          editorialType = itemResp.flatMap(_.tag).map(_.`type`.name),
-          activeBrandings = itemResp.flatMap { response =>
-            val sectionBrandings = response.section.flatMap { section =>
-              section.activeSponsorships.map(_.map(Branding.make(section.webTitle)))
-            }
-            val tagBrandings = response.tag.flatMap { tag =>
-              tag.activeSponsorships.map(_.map(Branding.make(tag.webTitle)))
-            }
-            val brandings = tagBrandings.toList.flatten ++ sectionBrandings.toList.flatten
-            if (brandings.isEmpty) None else Some(brandings)
+      val frontProperties: FrontProperties = ConfigAgent.fetchFrontProperties(path).copy(
+        editorialType = itemResp.flatMap(_.tag).map(_.`type`.name),
+        editionBrandings = {
+          val brandings = for {
+            response <- itemResp
+            item <- response.content
+          } yield {
+            Edition.all.map { edition =>
+              edition -> BrandingFinder.findBranding(item, edition.id)
+            }.toMap
           }
-        )
+          brandings.getOrElse(Map.empty)
+        }
+      )
 
       val seoData: SeoData = SeoData(path, navSection, webTitle, title, description)
       (seoData, frontProperties)

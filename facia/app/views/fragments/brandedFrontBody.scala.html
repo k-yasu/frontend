@@ -10,13 +10,13 @@
         @if(faciaPage.collections.nonEmpty) {
             <div class="l-side-margins">
                 <div class="@RenderClasses(Map(
-                    "fc-container--sponsored" -> (branding.sponsorshipType == Sponsored),
-                    "fc-container--paid-content paid-content" -> (branding.sponsorshipType == PaidContent)
+                    "fc-container--sponsored" -> (branding.brandingType == com.gu.commercial.branding.Sponsored),
+                    "fc-container--paid-content paid-content" -> (branding.brandingType == com.gu.commercial.branding.PaidContent)
                 ), "facia-page")"
                 data-link-name="Front | @request.path"
                 role="main">
 
-                    @if(branding.sponsorshipType == PaidContent){ @fragments.guBand() }
+                    @if(branding.brandingType == com.gu.commercial.branding.PaidContent){ @fragments.guBand() }
 
                     @defining(layout.Front.fromPressedPage(faciaPage, Edition(request)).containers) { collections =>
                         @collections.map { containerDefinition =>
@@ -24,7 +24,7 @@
                                 containerDefinition,
                                 faciaPage.frontProperties,
                                 Some(faciaPage.id),
-                                branding.sponsorshipType == PaidContent,
+                                branding.brandingType == com.gu.commercial.branding.PaidContent,
                                 faciaPage.collections.find {
                                     _.id == containerDefinition.dataId
                                 }.map {
@@ -46,7 +46,7 @@
 
                     @fragments.trendingTopics(faciaPage.allItems, faciaPage.id, faciaPage.allPath)
 
-                    @if(branding.sponsorshipType != PaidContent) {
+                    @if(branding.brandingType != com.gu.commercial.branding.PaidContent) {
                         <div class="fc-container fc-container--commercial">
                         @fragments.commercial.commercialComponent()
                         </div>

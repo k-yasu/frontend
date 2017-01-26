@@ -20,18 +20,18 @@
     case Some(branding) => {
         <div class="l-side-margins">
             <div
-            class="@RenderClasses(Map("fc-container--paid-content paid-content" -> (branding.sponsorshipType == PaidContent)), "u-cf index-page")"
+            class="@RenderClasses(Map("fc-container--paid-content paid-content" -> (branding.brandingType == com.gu.commercial.branding.PaidContent)), "u-cf index-page")"
             data-link-name="Front | @request.path"
             role="main">
 
-                @if(branding.sponsorshipType == PaidContent) {
+                @if(branding.brandingType == com.gu.commercial.branding.PaidContent) {
                     @fragments.guBand()
                 }
 
                 @defining(IndexPage.makeFront(index, Edition(request)).containers) { containers =>
                         @containers.map { containerDefinition =>
                             @container(containerDefinition,
-                                frontProperties = FrontProperties.fromEditionBranding(Map(Edition(request) -> branding)),
+                                frontProperties = FrontProperties.fromEditionBrandings(Map(Edition(request) -> Some(branding))),
                                 showFrontBranding = isFirstNonThrasherContainer(containerDefinition.index, containers))
                         }
                 }
