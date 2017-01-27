@@ -5,8 +5,8 @@
 @import com.gu.commercial.branding.PaidContent
 @(faciaPage: model.PressedPage)(implicit request: RequestHeader, context: model.ApplicationContext)
 
-@defining((faciaPage.branding(Edition(request)).exists(_.brandingType == Sponsored),
-           faciaPage.branding(Edition(request)).exists(_.brandingType == PaidContent))) { case (isSponsored, isAdFeature) =>
+@defining((faciaPage.metadata.branding(Edition(request)).exists(_.brandingType == Sponsored),
+           faciaPage.metadata.branding(Edition(request)).exists(_.brandingType == PaidContent))) { case (isSponsored, isAdFeature) =>
     @if(faciaPage.collections.nonEmpty) {
         <div class="l-side-margins">
             <div class="@RenderClasses(Map(

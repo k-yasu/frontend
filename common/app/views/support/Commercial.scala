@@ -32,7 +32,7 @@ object Commercial {
   }
 
   private def isBrandedContent(page: Page, edition: Edition, brandingType: BrandingType): Boolean =
-    page.branding(edition).exists(_.brandingType == BrandingType)
+    page.metadata.branding(edition).exists(_.brandingType == brandingType)
 
   def isPaidContent(page: Page): Boolean =
     isBrandedContent(page, defaultEdition, PaidContent)
@@ -52,7 +52,7 @@ object Commercial {
     val edition = Edition(request)
     def sponsor(branding: Edition => Option[Branding]) = branding(edition) map (_.sponsorName.toLowerCase)
 
-    val pageSponsor = sponsor(page.branding)
+    val pageSponsor = sponsor(page.metadata.branding)
 
     val allSponsors = page match {
       case front: PressedPage =>
@@ -84,7 +84,7 @@ object Commercial {
   }
 
   def brandingType(page: Page)(implicit request: RequestHeader): Option[BrandingType] = {
-    page.branding(Edition(request)).map(_.brandingType)
+    page.metadata.branding(Edition(request)).map(_.brandingType)
   }
 
   object topAboveNavSlot {

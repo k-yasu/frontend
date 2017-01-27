@@ -1,6 +1,6 @@
 package model
 
-import com.gu.commercial.branding.Branding
+import common.commercial.EditionBranding
 import common.{Edition, NavItem, Pagination, SectionLink}
 import model.content._
 import model.facia.PressedCollection
@@ -91,7 +91,7 @@ object MetaDataFormat {
     opengraphPropertiesOverrides: Map[String, String],
     isHosted: Boolean,
     twitterPropertiesOverrides: Map[String, String],
-    editionBrandings: Map[Edition, Option[Branding]]
+    editionBrandings: Option[Seq[EditionBranding]]
   )
 
   val readsMetadata: Reads[MetaData] = {

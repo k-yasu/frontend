@@ -1,8 +1,7 @@
 package model
 
-import com.gu.commercial.branding.Branding
 import com.gu.contentapi.client.model.v1.{Podcast => ApiPodcast, Reference => ApiReference, Tag => ApiTag}
-import common.{Edition, Pagination, RelativePathEscaper}
+import common.{Pagination, RelativePathEscaper}
 import conf.Configuration
 import contentapi.SectionTagLookUp
 import play.api.libs.json._
@@ -49,7 +48,7 @@ object Tag {
       opengraphPropertiesOverrides = openGraphPropertiesOverrides,
       twitterPropertiesOverrides = Map("twitter:card" -> "summary"),
       // todo
-      editionBrandings = Map.empty
+      editionBrandings = None
     )
   }
 
@@ -187,6 +186,4 @@ case class Tag (
   val isFootballTeam = properties.references.exists(_.`type` == "pa-football-team")
   val isFootballCompetition = properties.references.exists(_.`type` == "pa-football-competition")
   val contributorImagePath = properties.bylineImageUrl.map(ImgSrc(_, Contributor))
-
-  override def branding(edition: Edition): Option[Branding] = metadata.editionBrandings(edition)
 }

@@ -1,5 +1,6 @@
 @(index: services.IndexPage)(implicit request: RequestHeader, context: model.ApplicationContext)
 @import com.gu.commercial.branding.PaidContent
+@import common.commercial.EditionBranding
 @import common.{Edition, PagePaths}
 @import model.FrontProperties
 @import model.FrontProperties.empty
@@ -31,7 +32,7 @@
                 @defining(IndexPage.makeFront(index, Edition(request)).containers) { containers =>
                         @containers.map { containerDefinition =>
                             @container(containerDefinition,
-                                frontProperties = FrontProperties.fromEditionBrandings(Map(Edition(request) -> Some(branding))),
+                                frontProperties = FrontProperties.fromEditionBrandings(Some(Seq(EditionBranding(Edition(request), Some(branding))))),
                                 showFrontBranding = isFirstNonThrasherContainer(containerDefinition.index, containers))
                         }
                 }

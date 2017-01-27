@@ -75,7 +75,7 @@ object CardContent {
         val url = item.metadata.webUrl
         clickMacro map { cm => s"$cm$url" } getOrElse url
       },
-      branding = item.metadata.editionBrandings(edition)
+      branding = item.metadata.branding(edition)
     )
   }
 }

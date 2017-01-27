@@ -1,10 +1,9 @@
 package model
 
 import campaigns.PersonalInvestmentsCampaign
-import com.gu.commercial.branding.Branding
 import com.gu.contentapi.client.model.v1.{Section => ApiSection}
+import common.Pagination
 import common.commercial.EditionBranding
-import common.{Edition, Pagination}
 import play.api.libs.json.{JsBoolean, JsString, JsValue, Json}
 
 object Section {
@@ -37,7 +36,7 @@ object Section {
         case _ => Some("front")
       },
       javascriptConfigOverrides = javascriptConfigOverrides,
-      editionBrandings = EditionBranding.fromSection(section)
+      editionBrandings = Some(EditionBranding.fromSection(section))
     )
 
     Section(
@@ -47,13 +46,10 @@ object Section {
   }
 }
 
-case class Section private (
+case class Section private(
   override val metadata: MetaData,
   isEditionalised: Boolean
-  ) extends StandalonePage {
-
-  override def branding(edition: Edition): Option[Branding] = metadata.editionBrandings(edition)
-}
+) extends StandalonePage
 
 case class SectionSummary(id: String)
 

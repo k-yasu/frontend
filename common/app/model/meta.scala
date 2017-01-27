@@ -1,11 +1,11 @@
 package model
 
 import campaigns.PersonalInvestmentsCampaign
-import com.gu.commercial.branding.{Branding, BrandingFinder}
+import com.gu.commercial.branding.Branding
 import com.gu.contentapi.client.model.v1.{Content => CapiContent}
 import com.gu.contentapi.client.model.{v1 => contentapi}
 import com.gu.contentapi.client.utils.CapiModelEnrichment.RichCapiDateTime
-import common.commercial.AdUnitMaker
+import common.commercial.{AdUnitMaker, EditionBranding}
 import common.dfp._
 import common.{Edition, ManifestData, NavItem, Pagination}
 import conf.Configuration
@@ -138,7 +138,7 @@ object MetaData {
       isHosted = isHosted,
       twitterPropertiesOverrides = twitterPropertiesOverrides,
       // todo
-      editionBrandings = Map.empty
+      editionBrandings = None
     )
   }
 
@@ -147,14 +147,6 @@ object MetaData {
     val url = s"/$id"
     val sectionSummary: Option[SectionSummary] = apiContent.section map SectionSummary.fromCapiSection
     val sectionId = sectionSummary map (_.id) getOrElse ""
-
-
-    val editionBrandings = {
-      Edition.all.map { edition =>
-        edition -> BrandingFinder.findBranding(apiContent, edition.id)
-      }.toMap
-    }
-
 
     MetaData(
       id = id,
@@ -172,7 +164,7 @@ object MetaData {
         else CacheTime.NotRecentlyUpdated
       },
       isHosted = apiContent.isHosted,
-      editionBrandings = editionBrandings
+      editionBrandings = Some(EditionBranding.fromItem(apiContent))
     )
   }
 }
@@ -206,7 +198,7 @@ final case class MetaData (
   isHosted: Boolean = false,
   twitterPropertiesOverrides: Map[String, String] = Map(),
   contentWithSlimHeader: Boolean = false,
-  editionBrandings: Map[Edition, Option[Branding]]
+  editionBrandings: Option[Seq[EditionBranding]]
 ){
   val sectionId = section map (_.id) getOrElse ""
 
@@ -291,6 +283,12 @@ final case class MetaData (
     * This is used for Google Analytics, to be consistent with what the mobile apps do.
     */
   def normalisedContentType: String = StringUtils.remove(contentType.toLowerCase, ' ')
+
+  def branding(edition: Edition): Option[Branding] = for {
+    brandings <- editionBrandings
+    editionBranding <- brandings.find(_.edition == edition)
+    branding <- editionBranding.branding
+  } yield branding
 }
 
 object Page {
@@ -313,7 +311,6 @@ object Page {
 // A Page is something that has metadata, and anything with Metadata can be rendered.
 trait Page {
   def metadata: MetaData
-  def branding(edition: Edition): Option[Branding] = None
 }
 
 // ContentPage objects use data from a ContentApi item to populate metadata.
@@ -340,10 +337,8 @@ trait ContentPage extends Page {
     metadata.twitterProperties ++
     item.content.twitterProperties ++
     metadata.twitterPropertiesOverrides
-
-  override def branding(edition: Edition): Option[Branding] = metadata
-                                                                                         .editionBrandings(edition)
 }
+
 case class SimpleContentPage(content: ContentType) extends ContentPage {
   override lazy val item: ContentType = content
 }

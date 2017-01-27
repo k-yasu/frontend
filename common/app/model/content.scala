@@ -80,7 +80,7 @@ final case class Content(
   lazy val isImmersiveGallery = {
     metadata.contentType.toLowerCase == "gallery" &&
     {
-      val branding = metadata.editionBrandings(defaultEdition)
+      val branding = metadata.branding(defaultEdition)
       branding.isEmpty || branding.exists(_.brandingType != PaidContent)
     }
   }
@@ -156,7 +156,7 @@ final case class Content(
       tag.id == "childrens-books-site/childrens-books-site" && tag.properties.tagType == "Blog"
     }
 
-    lazy val isPaidContent = metadata.editionBrandings(defaultEdition).exists(_.brandingType == PaidContent)
+    lazy val isPaidContent = metadata.branding(defaultEdition).exists(_.brandingType == PaidContent)
 
     isChildrensBookBlog || isPaidContent
   }

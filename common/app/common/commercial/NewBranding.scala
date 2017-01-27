@@ -59,12 +59,5 @@ object NewBranding {
     (__ \ "branding").readNullable[Branding]
   }
 
-  implicit val brandingMapWrites: Writes[Map[Edition,Option[Branding]]] = new Writes[Map[Edition,Option[com.gu
-  .commercial.branding.Branding]]] {
-    def writes(map: Map[Edition,Option[Branding]]): JsValue = Json.obj("brandingEditions" -> map.toString)
-  }
-
-  implicit val brandingMapReads: Reads[Map[Edition,Option[Branding]]] = {
-    (__ \ "brandingEditions").read[Map[Edition,Option[Branding]]]
-  }
+  implicit val editionBrandingFormat = Json.format[EditionBranding]
 }

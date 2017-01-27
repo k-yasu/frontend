@@ -40,7 +40,7 @@ object Support {
       section = None,
       webTitle = "unused",
       adUnitSuffix = "unused",
-      editionBrandings = Map.empty
+      editionBrandings = None
     )
   }
 }

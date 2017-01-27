@@ -165,7 +165,7 @@ final case class PressedProperties(
   webUrl: Option[String]
 ) {
   def branding(edition: Edition): Option[Branding] =
-    maybeContent map (_.metadata.editionBrandings(edition)) getOrElse None
+    maybeContent map (_.metadata.branding(edition)) getOrElse None
 }
 
 object PressedCardHeader {
